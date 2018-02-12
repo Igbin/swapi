@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="result">
+		<h1>List planet of star wars sorted by diameter</h1>
+	</div>
+</body>
+	<style type="text/css">
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+var arr = [];
+
+$.ajax({
+	url: 'https://swapi.co/api/planets',
+})
+.done(function(text) {
+	text.results.forEach(function(elem,index) {
+		arr.push(elem.diameter+elem.name)
+	})
+
+function sortArr(a,b){
+	return parseInt(a) - parseInt(b)
+}
+arr.sort(sortArr)
+arr.forEach(function(elem,index) {
+	$('#result').append((index+1) + " "+ elem.replace(/\d/g, '') + "<br>")
+})		
+})
+.fail(function() {
+	$('#result').html('Ошибка загрузки');
+});
+});
+
+</script>
+
+
+
+
+
+</body>
+</html>
