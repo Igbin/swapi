@@ -15,28 +15,25 @@
 
 $(document).ready(function() {
 var arr = [];
+function sortArr(a,b){
+	return parseInt(a.diameter) - parseInt(b.diameter)
+}
 
 $.ajax({
 	url: 'https://swapi.co/api/planets',
 })
 .done(function(text) {
+	text.results.sort(sortArr)
 	text.results.forEach(function(elem,index) {
-		arr.push(elem.diameter+elem.name)
-	})
-
-function sortArr(a,b){
-	return parseInt(a) - parseInt(b)
-}
-arr.sort(sortArr)
-arr.forEach(function(elem,index) {
-	$('#result').append((index+1) + " "+ elem.replace(/\d/g, '') + "<br>")
+	$('#result').append((index+1) + " "+ elem.name + "<br>")
 })		
-})
+	})
+	
+
 .fail(function() {
 	$('#result').html('Ошибка загрузки');
 });
-});
-
+})
 </script>
 
 
