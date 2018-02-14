@@ -25,8 +25,9 @@ $.ajax({
 .done(function(text) {
 	text.results.sort(sortArr)
 	text.results.forEach(function(elem,index) {
-	$('#result').append((index+1) + " "+ elem.name + "<br>")
+	arr.push((index+1) + " "  + elem.name + "<br>")
 })		
+$('#result').append(arr);
 	})
 	
 
