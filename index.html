@@ -7,14 +7,19 @@
 	<div id="result">
 		<h1>List planet of star wars sorted by diameter</h1>
 	</div>
+	<input id="input" type="text" name="" onkeyup="myFunc()">
 </body>
 	<style type="text/css">
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-$(document).ready(function() {
 var arr = [];
+$(document).ready(function() {
+
+
+
+
 function sortArr(a,b){
 	return parseInt(a.diameter) - parseInt(b.diameter)
 }
@@ -25,16 +30,36 @@ $.ajax({
 .done(function(text) {
 	text.results.sort(sortArr)
 	text.results.forEach(function(elem,index) {
-	arr.push((index+1) + " "  + elem.name + "<br>")
+	arr.push((index+1) + " "  + elem.name  + "<br>")
 })		
 $('#result').append(arr);
 	})
 	
-
 .fail(function() {
 	$('#result').html('Ошибка загрузки');
 });
 })
+
+
+var arr2 = [];
+function myFunc() {
+   arr2 = arr.map(function(elem,index) {
+	if (elem.indexOf($("#input").val()) != -1) {
+
+		
+	return elem = elem.slice(0, elem.indexOf($("#input").val())) + "<span style='color:yellow'>" + $("#input").val() + "</span>"	+ elem.slice((elem.indexOf($("#input").val())+ $("#input").val().length), (elem.length));
+
+	} else {
+		return elem
+	}
+})		
+   	$('#result').empty();
+	$('#result').append(arr2)
+
+
+}
+
+
 </script>
 
 
