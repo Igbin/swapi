@@ -30,7 +30,7 @@ $.ajax({
 .done(function(text) {
 	text.results.sort(sortArr)
 	text.results.forEach(function(elem,index) {
-	arr.push((index+1) + " "  + elem.name  + "<br>")
+	arr.push((index+1) + " "  + elem.name)
 })		
 $('#result').append(arr);
 	})
@@ -47,10 +47,10 @@ function myFunc() {
 	if (elem.indexOf($("#input").val()) != -1) {
 
 		
-	return elem = elem.slice(0, elem.indexOf($("#input").val())) + "<span style='color:yellow'>" + $("#input").val() + "</span>"	+ elem.slice((elem.indexOf($("#input").val())+ $("#input").val().length), (elem.length));
+	return elem = elem.slice(0, elem.indexOf($("#input").val())) + "<span style='background:yellow'>" + $("#input").val() + "</span>"	+ elem.slice((elem.indexOf($("#input").val())+ $("#input").val().length), (elem.length)) + "<br>";
 
 	} else {
-		return elem
+		return elem + "<br>";
 	}
 })		
    	$('#result').empty();
