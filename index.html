@@ -30,7 +30,7 @@ $.ajax({
 .done(function(text) {
 	text.results.sort(sortArr)
 	text.results.forEach(function(elem,index) {
-	arr.push((index+1) + " "  + elem.name)
+	arr.push("<p>" + (index+1) + " "  + elem.name + "</p>")
 })		
 $('#result').append(arr);
 	})
@@ -42,12 +42,15 @@ $('#result').append(arr);
 
 
 var arr2 = [];
-function myFunc() {
-   arr2 = arr.map(function(elem,index) {
-	if (elem.indexOf($("#input").val()) != -1) {
 
-		
-	return elem = elem.slice(0, elem.indexOf($("#input").val())) + "<span style='background:yellow'>" + $("#input").val() + "</span>"	+ elem.slice((elem.indexOf($("#input").val())+ $("#input").val().length), (elem.length)) + "<br>";
+function myFunc() {
+	var input = $("#input").val();
+	var reg = new RegExp('(' + input + ')','g');
+
+   arr2 = arr.map(function(elem,index) {
+	if (elem.indexOf(input) != -1 && input!="") {
+
+	return elem = elem.replace(reg , "<span style='background:yellow'>" + $("#input").val() + "</span>")
 
 	} else {
 		return elem + "<br>";
