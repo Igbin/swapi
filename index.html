@@ -18,8 +18,6 @@ var arr = [];
 $(document).ready(function() {
 
 
-
-
 function sortArr(a,b){
 	return parseInt(a.diameter) - parseInt(b.diameter)
 }
@@ -28,9 +26,12 @@ $.ajax({
 	url: 'https://swapi.co/api/planets',
 })
 .done(function(text) {
+
 	text.results.sort(sortArr)
 	text.results.forEach(function(elem,index) {
-	arr.push("<p>" + (index+1) + " "  + elem.name + "</p>")
+		var element = `<p>${(index+1)} ${elem.name}</p>`
+	//var element = "<p>" + (index+1) + " "  + elem.name + "</p>";
+	arr.push(element)
 })		
 $('#result').append(arr);
 	})
@@ -53,7 +54,7 @@ function myFunc() {
 	return elem = elem.replace(reg , "<span style='background:yellow'>" + $("#input").val() + "</span>")
 
 	} else {
-		return elem + "<br>";
+		return elem;
 	}
 })		
    	$('#result').empty();
