@@ -5,63 +5,51 @@
 </head>
 <body>
 	<div id="result">
-		<h1>List planet of star wars sorted by diameter</h1>
+		<h1>List planet of star wars</h1>
 	</div>
-	<input id="input" type="text" name="" onkeyup="myFunc()">
+	<table id="table" border="1"></table>
 </body>
 	<style type="text/css">
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-var arr = [];
-$(document).ready(function() {
 
 
-function sortArr(a,b){
-	return parseInt(a.diameter) - parseInt(b.diameter)
-}
+fetch('https://swapi.co/api/planets')
+.then(function(response) {
+    return response.json();
+   })
+   .then(function(text) {
 
-$.ajax({
-	url: 'https://swapi.co/api/planets',
-})
-.done(function(text) {
-
-	text.results.sort(sortArr)
-	text.results.forEach(function(elem,index) {
-		var element = `<p>${(index+1)} ${elem.name}</p>`
-	//var element = "<p>" + (index+1) + " "  + elem.name + "</p>";
-	arr.push(element)
-})		
-$('#result').append(arr);
-	})
-	
-.fail(function() {
-	$('#result').html('Ошибка загрузки');
-});
-})
-
-
-var arr2 = [];
-
-function myFunc() {
-	var input = $("#input").val();
-	var reg = new RegExp('(' + input + ')','g');
-
-   arr2 = arr.map(function(elem,index) {
-	if (elem.indexOf(input) != -1 && input!="") {
-
-	return elem = elem.replace(reg , "<span style='background:yellow'>" + $("#input").val() + "</span>")
-
-	} else {
-		return elem;
+	let tr = document.createElement("tr")
+		for(key in text.results[0]) {
+	let td = document.createElement("td")
+	td.innerHTML = key
+	tr.appendChild(td)
+	table.appendChild(tr)
 	}
-})		
-   	$('#result').empty();
-	$('#result').append(arr2)
+
+		text.results.forEach(function(elem,index) {
+		let tr2 = document.createElement("tr")
+		for(key in elem) {
+		let td2 = document.createElement("td")
+		td2.innerHTML = elem[key]
+		tr2.appendChild(td2)
+		}
+		table.appendChild(tr2)
+})
+
+  })
+
+	
 
 
-}
+
+
+
+
+
 
 
 </script>
