@@ -7,7 +7,7 @@
 	<div >
 		<h1>List planet of star wars</h1>
 	</div>
-	<table id="result" border="1"></table>
+	<table id="result" border="1" width="1900"></table>
 </body>
 	<style type="text/css">
 </style>
@@ -22,13 +22,14 @@ fetch(url)
    .then((text)=> {
 
 	let tr = document.createElement("tr")
-		for(key in text.results[0]) {
+	for(key in text.results[0]) {
 	var td = document.createElement("td")
 	td.innerHTML = key
 	tr.appendChild(td)
 	result.appendChild(tr)
 	}	
-		 text.results.forEach((elem,index) =>{
+		let  createTable =  (arr) => {
+		 arr.forEach((elem,index) =>{
 		let tr2 = document.createElement("tr")
 		for(key in elem) {
 		let td2 = document.createElement("td")
@@ -37,51 +38,37 @@ fetch(url)
 		}
 		result.appendChild(tr2)
 		})
+		}
+		 createTable(text.results)
 			let mySorting = (e) => {
 				let target = event.target.innerHTML;
 				for(key in text.results[0]) {
 					if(key == target) {
-						console.log(target)
 						if(parseInt(text.results[0][key].charAt(0))) {
 							let mySortNumbers = (a,b)=> {						
 							return parseInt(a[target]) - parseInt(b[target])
 							}
 							let table = document.querySelectorAll('tr')
 							for(let i =1; i < table.length;i++) {
-								table[i].innerHTML = ""
+								result.removeChild(table[i])
 							}
 							 text.results.sort(mySortNumbers)
-								 text.results.forEach((elem,index) =>{
-								let tr2 = document.createElement("tr")
-								for(key in elem) {
-								let td2 = document.createElement("td")
-								td2.innerHTML = elem[key]
-								tr2.appendChild(td2)
-									}
-								result.appendChild(tr2)
-									})
+							 createTable(text.results)
 						} else {
 						let mySortNaNs = (a,b)=> {
 							return a[target].localeCompare(b[target])
 							}
 							let table = document.querySelectorAll('tr')
 							for(let i =1; i < table.length;i++) {
-								table[i].innerHTML = ""
+								result.removeChild(table[i])
 							}
 							 text.results.sort(mySortNaNs)
-								 text.results.forEach((elem,index) =>{
-								let tr2 = document.createElement("tr")
-								for(key in elem) {
-								let td2 = document.createElement("td")
-								td2.innerHTML = elem[key]
-								tr2.appendChild(td2)
-									}
-								result.appendChild(tr2)
-									})
+								createTable(text.results)
 						}
 					}
 				}
 			}
+
 		let firstStroka = document.querySelector('tr').children
 		for(let i =0; i < firstStroka.length;i++) {
 			firstStroka[i].addEventListener('click', mySorting)
