@@ -4,43 +4,93 @@
 	<title></title>
 </head>
 <body>
-	<div id="result">
+	<div >
 		<h1>List planet of star wars</h1>
 	</div>
-	<table id="table" border="1"></table>
+	<table id="result" border="1"></table>
 </body>
 	<style type="text/css">
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-
-
-fetch('https://swapi.co/api/planets')
-.then(function(response) {
+const url = 'https://swapi.co/api/planets'
+fetch(url)
+.then((response)=> {
     return response.json();
    })
-   .then(function(text) {
+   .then((text)=> {
 
 	let tr = document.createElement("tr")
 		for(key in text.results[0]) {
-	let td = document.createElement("td")
+	var td = document.createElement("td")
 	td.innerHTML = key
 	tr.appendChild(td)
-	table.appendChild(tr)
-	}
-
-		text.results.forEach(function(elem,index) {
+	result.appendChild(tr)
+	}	
+		 text.results.forEach((elem,index) =>{
 		let tr2 = document.createElement("tr")
 		for(key in elem) {
 		let td2 = document.createElement("td")
 		td2.innerHTML = elem[key]
 		tr2.appendChild(td2)
 		}
-		table.appendChild(tr2)
+		result.appendChild(tr2)
+		})
+			let mySorting = (e) => {
+				let target = event.target.innerHTML;
+				for(key in text.results[0]) {
+					if(key == target) {
+						console.log(target)
+						if(parseInt(text.results[0][key].charAt(0))) {
+							let mySortNumbers = (a,b)=> {						
+							return parseInt(a[target]) - parseInt(b[target])
+							}
+							let table = document.querySelectorAll('tr')
+							for(let i =1; i < table.length;i++) {
+								table[i].innerHTML = ""
+							}
+							 text.results.sort(mySortNumbers)
+								 text.results.forEach((elem,index) =>{
+								let tr2 = document.createElement("tr")
+								for(key in elem) {
+								let td2 = document.createElement("td")
+								td2.innerHTML = elem[key]
+								tr2.appendChild(td2)
+									}
+								result.appendChild(tr2)
+									})
+						} else {
+						let mySortNaNs = (a,b)=> {
+							return a[target].localeCompare(b[target])
+							}
+							let table = document.querySelectorAll('tr')
+							for(let i =1; i < table.length;i++) {
+								table[i].innerHTML = ""
+							}
+							 text.results.sort(mySortNaNs)
+								 text.results.forEach((elem,index) =>{
+								let tr2 = document.createElement("tr")
+								for(key in elem) {
+								let td2 = document.createElement("td")
+								td2.innerHTML = elem[key]
+								tr2.appendChild(td2)
+									}
+								result.appendChild(tr2)
+									})
+						}
+					}
+				}
+			}
+		let firstStroka = document.querySelector('tr').children
+		for(let i =0; i < firstStroka.length;i++) {
+			firstStroka[i].addEventListener('click', mySorting)
+		}
+
+
 })
 
-  })
+
 
 	
 
