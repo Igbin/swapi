@@ -7,9 +7,10 @@
 	<div >
 		<h1>List planet of star wars</h1>
 	</div>
-	<table id="result" border="1" width="1900"></table>
+	<table id="result" border="1"></table>
 </body>
 	<style type="text/css">
+
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -21,30 +22,64 @@ fetch(url)
    })
    .then((text)=> {
 
+ 	let array = text.results;
 	let tr = document.createElement("tr")
 	for(key in text.results[0]) {
-	var td = document.createElement("td")
+	var td = document.createElement("td");
 	td.innerHTML = key
 	tr.appendChild(td)
 	result.appendChild(tr)
 	}	
+
+	  	let headLine = document.querySelector('tr').children
+		for(let i =0; i < headLine.length;i++) {
+			headLine[i].onclick = mySorting;
+			headLine[i].onmouseover = (e) => event.target.style.cssText = 'cursor: pointer'
+		}
+
+		let  myUpdate = (e) => {
+			let position;
+			for(let i =0; i < event.target.parentNode.children.length;i++) {
+				if(event.target.parentNode.children[i].innerHTML == event.target.innerHTML ) {
+					position = i
+				}
+			}
+			let objProp = headLine[position].innerHTML;
+			let input = document.createElement("input")
+			input.addEventListener("blur", () => {
+			var data = input.parentNode.getAttribute("data");
+			input.parentNode.innerHTML = input.value + "<br><span style='color:red'>edited</span>";
+				for(let i=0; i < array.length; i++) {
+					for(let key in array[i]) {
+						if(array[i].name == data){
+							array[i][objProp] = input.value + "<br><span style='color:red'>edited</span>";
+						}
+						}
+					}
+				})
+							
+			event.target.appendChild(input)
+			}		
+
 		let  createTable =  (arr) => {
 		 arr.forEach((elem,index) =>{
 		let tr2 = document.createElement("tr")
 		for(key in elem) {
 		let td2 = document.createElement("td")
 		td2.innerHTML = elem[key]
+		td2.setAttribute("data", elem.name)
+		td2.addEventListener('dblclick', myUpdate)
 		tr2.appendChild(td2)
 		}
 		result.appendChild(tr2)
 		})
 		}
-		 createTable(text.results)
-			let mySorting = (e) => {
+		 createTable(array)
+			function mySorting (e) {
 				let target = event.target.innerHTML;
-				for(key in text.results[0]) {
+				for(key in array[0]) {
 					if(key == target) {
-						if(parseInt(text.results[0][key].charAt(0))) {
+						if(parseInt(array[0][key].charAt(0))) {
 							let mySortNumbers = (a,b)=> {						
 							return parseInt(a[target]) - parseInt(b[target])
 							}
@@ -52,8 +87,8 @@ fetch(url)
 							for(let i =1; i < table.length;i++) {
 								result.removeChild(table[i])
 							}
-							 text.results.sort(mySortNumbers)
-							 createTable(text.results)
+							 array.sort(mySortNumbers)
+							 createTable(array)
 						} else {
 						let mySortNaNs = (a,b)=> {
 							return a[target].localeCompare(b[target])
@@ -62,21 +97,15 @@ fetch(url)
 							for(let i =1; i < table.length;i++) {
 								result.removeChild(table[i])
 							}
-							 text.results.sort(mySortNaNs)
-								createTable(text.results)
+							 array.sort(mySortNaNs)
+								createTable(array)
 						}
 					}
 				}
 			}
 
-		let firstStroka = document.querySelector('tr').children
-		for(let i =0; i < firstStroka.length;i++) {
-			firstStroka[i].addEventListener('click', mySorting)
-		}
-
-
 })
-
+.catch()
 
 
 	
