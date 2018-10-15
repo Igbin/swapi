@@ -19,15 +19,15 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-const url = 'https://swapi.co/api/planets'
-fetch(url)
+const URL = 'https://swapi.co/api/planets'
+fetch(URL)
 .then((response)=> {
 return response.json();
  })
    .then((text)=> {
    	let preloader = document.querySelector(".preloader")
    	preloader.style.display = "none";
- 	let array = text.results;
+ 	const planetArr = text.results;
 	let tr = document.createElement("tr");
 	for(key in text.results[0]) {
 	var td = document.createElement("td");
@@ -46,7 +46,7 @@ return response.json();
 			}
 			let position;
 			for(let i =0; i < event.target.parentNode.children.length;i++) {
-				if(event.target.parentNode.children[i].innerHTML == event.target.innerHTML ) {
+				if(event.target.parentNode.children[i].innerHTML === event.target.innerHTML ) {
 					position = i
 				}
 			}
@@ -62,7 +62,7 @@ return response.json();
 			event.target.parentNode.removeChild(event.target)
 			return false
 		}
-			else if(event.target.value != ""){
+			else if(event.target.value !== ""){
 			event.target.parentNode.innerHTML = event.target.value + "<br><span style='color:red'>edited</span>";
 		} 
 		else {
@@ -70,10 +70,10 @@ return response.json();
 			event.target.parentNode.removeChild(event.target)
 			return false
 				}
-				for(let i=0; i < array.length; i++) {
-					for(let key in array[i]) {
-						if(array[i].name == data){
-							array[i][objProp] = event.target.value + "<br><span style='color:red'>edited</span>";
+				for(let i=0; i < planetArr.length; i++) {
+					for(let key in planetArr[i]) {
+						if(planetArr[i].name === data){
+							planetArr[i][objProp] = event.target.value + "<br><span style='color:red'>edited</span>";
 						}
 						}
 					}
@@ -111,9 +111,8 @@ return response.json();
 					if (confirm("Are you sure want to delete this planet?"))
 					result.removeChild(this.parentElement.parentElement)
 					for(let i =0; i < arr.length; i++) {
-						console.log(this.parentElement.textContent)
 						for(let key in arr[i]) {
-							if(arr[i][key]== this.parentElement.textContent.substring(0, this.parentElement.textContent.length-1)) {
+							if(arr[i][key]=== this.parentElement.textContent.substring(0, this.parentElement.textContent.length-1)) {
 								arr.splice(i,1)
 							}
 						}
@@ -124,20 +123,20 @@ return response.json();
 
 		}
 		}
-		 createTable(array)
+		 createTable(planetArr)
 			function mySorting (e) {
 				for(let i =0; i < headLine.length;i++) {
 				headLine[i].style.backgroundColor = "";}
 				event.target.style.backgroundColor = 'green'
 				let target = event.target.textContent;
-				for(key in array[0]) {
-					if(key == target) {
-						if(Array.isArray(array[0][key])) {
+				for(key in planetArr[0]) {
+					if(key === target) {
+						if(Array.isArray(planetArr[0][key])) {
 							let mySortNaNs = (a,b)=> {
 							return a[target].localeCompare(b[target])
 							}
 						}
-						else if(parseInt(array[0][key].charAt(0))) {
+						else if(parseInt(planetArr[0][key].charAt(0))) {
 							let mySortNumbers = (a,b)=> {
 							return parseInt(a[target]) - parseInt(b[target])
 							}
@@ -145,8 +144,8 @@ return response.json();
 							for(let i =1; i < table.length;i++) {
 								result.removeChild(table[i])
 							}
-							 array.sort(mySortNumbers)
-							 createTable(array)
+							 planetArr.sort(mySortNumbers)
+							 createTable(planetArr)
 						} else {
 						let mySortNaNs = (a,b)=> {
 							return a[target].localeCompare(b[target])
@@ -155,8 +154,8 @@ return response.json();
 							for(let i =1; i < table.length;i++) {
 								result.removeChild(table[i])
 							}
-							 array.sort(mySortNaNs)
-								createTable(array)
+							 planetArr.sort(mySortNaNs)
+								createTable(planetArr)
 						}
 					}
 					
