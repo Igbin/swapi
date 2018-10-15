@@ -2,15 +2,18 @@
 <html>
 <head>
 	<title></title>
-	<link rel="stylesheet" href="main.css">
+	<link rel="stylesheet" href="main.css" />
 </head>
 <body>
-	<div >
+	<div id="wraper">
 		<h1>List planet of star wars</h1>
 	</div>
-	<table class="main-table" id="result" border="1"></table>
+<img class="preloader" src="http://zornet.ru/Ajaxoskrip/Fyrkes/Zret/31/Loader-76.gif" alt="preloader">
+	<table id="result" border="1" class="main-table"></table>
 </body>
 	<style type="text/css">
+
+
 
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -19,26 +22,28 @@
 const url = 'https://swapi.co/api/planets'
 fetch(url)
 .then((response)=> {
-    return response.json();
-   })
+return response.json();
+ })
    .then((text)=> {
-
+   	let preloader = document.querySelector(".preloader")
+   	preloader.style.display = "none";
  	let array = text.results;
-	let tr = document.createElement("tr")
+	let tr = document.createElement("tr");
 	for(key in text.results[0]) {
 	var td = document.createElement("td");
-	td.innerHTML = key
-	tr.appendChild(td)
-	result.appendChild(tr)
+	td.innerHTML = key;
+	tr.appendChild(td);
+	result.appendChild(tr);
 	}	
-
-	  	let headLine = document.querySelector('tr').children
+	  	let headLine = document.querySelector('tr').children;
 		for(let i =0; i < headLine.length;i++) {
 			headLine[i].onclick = mySorting;
-			headLine[i].onmouseover = (e) => event.target.style.cssText = 'cursor: pointer'
+			headLine[i].onmouseover = (e) => event.target.classList.add("pointer");
 		}
-
 		let  myUpdate = (e) => {
+			if(document.querySelector("input")) {
+				document.querySelector("input").parentNode.removeChild(document.querySelector("input"))
+			}
 			let position;
 			for(let i =0; i < event.target.parentNode.children.length;i++) {
 				if(event.target.parentNode.children[i].innerHTML == event.target.innerHTML ) {
@@ -46,42 +51,94 @@ fetch(url)
 				}
 			}
 			let objProp = headLine[position].innerHTML;
-			let input = document.createElement("input")
-			input.addEventListener("blur", () => {
+			let input = document.createElement("input");
+			 var computedStyle = getComputedStyle(event.target);
+			input.style.width = computedStyle.width;
+			input.addEventListener("blur", (e) => {
 			var data = input.parentNode.getAttribute("data");
-			input.parentNode.innerHTML = input.value + "<br><span style='color:red'>edited</span>";
+
+			 if( !isNaN(parseInt(event.target.parentNode.textContent)) && (isNaN(event.target.value)==true)){
+			alert("you must type number value");
+			event.target.parentNode.removeChild(event.target)
+			return false
+		}
+			else if(event.target.value != ""){
+			event.target.parentNode.innerHTML = event.target.value + "<br><span style='color:red'>edited</span>";
+		} 
+		else {
+			alert("type some data to change value");
+			event.target.parentNode.removeChild(event.target)
+			return false
+				}
 				for(let i=0; i < array.length; i++) {
 					for(let key in array[i]) {
 						if(array[i].name == data){
-							array[i][objProp] = input.value + "<br><span style='color:red'>edited</span>";
+							array[i][objProp] = event.target.value + "<br><span style='color:red'>edited</span>";
 						}
 						}
 					}
-				})
-							
+				})			
 			event.target.appendChild(input)
+			input.focus()
 			}		
-
+		
 		let  createTable =  (arr) => {
-		 arr.forEach((elem,index) =>{
-		let tr2 = document.createElement("tr")
+		arr.forEach((elem,index) =>{
+		let tr2 = document.createElement("tr");
 		for(key in elem) {
-		let td2 = document.createElement("td")
-		td2.innerHTML = elem[key]
-		td2.setAttribute("data", elem.name)
-		td2.addEventListener('dblclick', myUpdate)
-		tr2.appendChild(td2)
+		let td2 = document.createElement("td");
+		if(Array.isArray(elem[key])) {
+			for(let i=0;i <elem[key].length;i++) {
+				td2.innerHTML +=  "" + elem[key][i]
+			}
+		} else {
+		td2.innerHTML = elem[key];}
+		td2.setAttribute("data", elem.name);
+		td2.addEventListener('dblclick', myUpdate);
+		tr2.appendChild(td2);
 		}
 		result.appendChild(tr2)
 		})
+		 let planets = document.querySelectorAll('tr td:first-child')
+		 	for(let i = 1; i< planets.length;i++) {
+			planets[i].onmouseenter = (e) => {
+				let X = document.createElement("span")
+				X.innerHTML = "X";
+				X.classList.add("X")
+				planets[i].appendChild(X);
+				X.onmouseover = (e) => event.target.style.cssText = 'cursor: pointer'; 
+				X.onclick = function() {
+					if (confirm("Are you sure want to delete this planet?"))
+					result.removeChild(this.parentElement.parentElement)
+					for(let i =0; i < arr.length; i++) {
+						console.log(this.parentElement.textContent)
+						for(let key in arr[i]) {
+							if(arr[i][key]== this.parentElement.textContent.substring(0, this.parentElement.textContent.length-1)) {
+								arr.splice(i,1)
+							}
+						}
+					}
+				}
+				planets[i].onmouseleave = (e) => event.target.removeChild(X)
+			}
+
+		}
 		}
 		 createTable(array)
 			function mySorting (e) {
-				let target = event.target.innerHTML;
+				for(let i =0; i < headLine.length;i++) {
+				headLine[i].style.backgroundColor = "";}
+				event.target.style.backgroundColor = 'green'
+				let target = event.target.textContent;
 				for(key in array[0]) {
 					if(key == target) {
-						if(parseInt(array[0][key].charAt(0))) {
-							let mySortNumbers = (a,b)=> {						
+						if(Array.isArray(array[0][key])) {
+							let mySortNaNs = (a,b)=> {
+							return a[target].localeCompare(b[target])
+							}
+						}
+						else if(parseInt(array[0][key].charAt(0))) {
+							let mySortNumbers = (a,b)=> {
 							return parseInt(a[target]) - parseInt(b[target])
 							}
 							let table = document.querySelectorAll('tr')
@@ -102,16 +159,29 @@ fetch(url)
 								createTable(array)
 						}
 					}
+					
 				}
+					let mesg = document.createElement("h1")
+					mesg.setAttribute("id", 'alertMsg')
+					mesg.style.cssText = "color:green", "margin-left:200px";
+					mesg.innerHTML = ' sorted by ' + target;
+					let a = document.getElementById('alertMsg')
+					if(a) {
+						wraper.removeChild(a)
+						wraper.appendChild(mesg)
+					} else {
+					wraper.appendChild(mesg)
+					}
 			}
 
 })
-.catch()
+.catch(
+	error => {
+		alert(error)
+	})
 
 
 	
-
-
 
 
 

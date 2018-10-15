@@ -1,23 +1,39 @@
+
 body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
-
-.main-table {
+ .main-table {
     width: 100%;
     border-collapse: collapse;
 }
-
-.main-table td, 
+ .main-table td, 
 .main-table th {
     padding: 5px;
     word-wrap: break-word;
     max-width: 60px;
+    position: relative;
 }
-
-.main-table tr:nth-child(even) {
+ .main-table tr:nth-child(even) {
     background-color: #ddd;
 }
-
-.main-table tr:first-child td {
+ .main-table tr:first-child td {
     font-weight: 600;
+}
+h1 {
+	display: inline-block;
+}
+.preloader{
+	display:block; 
+	margin:0 auto;
+}
+.pointer:hover {
+cursor: pointer;
+}
+.X {
+color: red;
+border: 1px solid black;	
+position: absolute;
+top: 0;
+right: 0;
+font-size: 1.5em;
 }
