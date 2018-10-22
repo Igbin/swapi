@@ -7,27 +7,24 @@
 <body>
 	<div id="wraper">
 		<h1>List planet of star wars</h1>
+		<input type="text" name="" id="filter">
 	</div>
-<img class="preloader" src="http://zornet.ru/Ajaxoskrip/Fyrkes/Zret/31/Loader-76.gif" alt="preloader">
+	<img class="preloader" src="http://zornet.ru/Ajaxoskrip/Fyrkes/Zret/31/Loader-76.gif" alt="preloader">
 	<table id="result" border="1" class="main-table"></table>
 </body>
-	<style type="text/css">
-
-
-
-</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
-
 const URL = 'https://swapi.co/api/planets'
 fetch(URL)
 .then((response)=> {
 return response.json();
  })
    .then((text)=> {
-   	let preloader = document.querySelector(".preloader")
+   	const preloader = document.querySelector(".preloader")
    	preloader.style.display = "none";
+
  	const planetArr = text.results;
+
 	let tr = document.createElement("tr");
 	for(key in text.results[0]) {
 	var td = document.createElement("td");
@@ -41,8 +38,8 @@ return response.json();
 			headLine[i].onmouseover = (e) => event.target.classList.add("pointer");
 		}
 		let  myUpdate = (e) => {
-			if(document.querySelector("input")) {
-				document.querySelector("input").parentNode.removeChild(document.querySelector("input"))
+			if(document.querySelector("#result input")) {
+			document.querySelector("#result input").parentNode.removeChild(document.querySelector("input"))
 			}
 			let position;
 			for(let i =0; i < event.target.parentNode.children.length;i++) {
@@ -52,12 +49,11 @@ return response.json();
 			}
 			let objProp = headLine[position].innerHTML;
 			let input = document.createElement("input");
-			 var computedStyle = getComputedStyle(event.target);
+			var computedStyle = getComputedStyle(event.target);
 			input.style.width = computedStyle.width;
 			input.addEventListener("blur", (e) => {
-			var data = input.parentNode.getAttribute("data");
-
-			 if( !isNaN(parseInt(event.target.parentNode.textContent)) && (isNaN(event.target.value)==true)){
+			let data = input.parentNode.getAttribute("data");
+			if( !isNaN(parseInt(event.target.parentNode.textContent)) && (isNaN(event.target.value)==true)){
 			alert("you must type number value");
 			event.target.parentNode.removeChild(event.target)
 			return false
@@ -91,15 +87,16 @@ return response.json();
 			for(let i=0;i <elem[key].length;i++) {
 				td2.innerHTML +=  "" + elem[key][i]
 			}
-		} else {
-		td2.innerHTML = elem[key];}
+			} else {
+			td2.innerHTML = elem[key];
+			}
 		td2.setAttribute("data", elem.name);
 		td2.addEventListener('dblclick', myUpdate);
 		tr2.appendChild(td2);
 		}
 		result.appendChild(tr2)
 		})
-		 let planets = document.querySelectorAll('tr td:first-child')
+		   let planets = document.querySelectorAll('tr td:first-child')
 		 	for(let i = 1; i< planets.length;i++) {
 			planets[i].onmouseenter = (e) => {
 				let X = document.createElement("span")
@@ -120,11 +117,23 @@ return response.json();
 				}
 				planets[i].onmouseleave = (e) => event.target.removeChild(X)
 			}
+		}
+		}
+		createTable(planetArr);
 
-		}
-		}
-		 createTable(planetArr)
-			function mySorting (e) {
+		function mySorting (e) {
+				let arrForSorting = [];
+				let planets = document.querySelectorAll('tr td:first-child')
+		 					for(let i = 1; i< planets.length;i++) {
+		 						for(let j = 0; j< planetArr.length;j++) {
+		 							for(let key in planetArr[j]) {
+		 								if(planets[i].textContent == planetArr[j][key]) {
+		 									console.log("somethig")
+		 									arrForSorting.push(planetArr[j])
+		 								}
+		 							}
+		 						}
+		 						}
 				for(let i =0; i < headLine.length;i++) {
 				headLine[i].style.backgroundColor = "";}
 				event.target.style.backgroundColor = 'green'
@@ -138,14 +147,16 @@ return response.json();
 						}
 						else if(parseInt(planetArr[0][key].charAt(0))) {
 							let mySortNumbers = (a,b)=> {
+								console.log(parseInt(a[target]))
+								console.log(parseInt(b[target]))
 							return parseInt(a[target]) - parseInt(b[target])
 							}
 							let table = document.querySelectorAll('tr')
 							for(let i =1; i < table.length;i++) {
 								result.removeChild(table[i])
 							}
-							 planetArr.sort(mySortNumbers)
-							 createTable(planetArr)
+							 arrForSorting.sort(mySortNumbers)
+							 createTable(arrForSorting)
 						} else {
 						let mySortNaNs = (a,b)=> {
 							return a[target].localeCompare(b[target])
@@ -154,8 +165,8 @@ return response.json();
 							for(let i =1; i < table.length;i++) {
 								result.removeChild(table[i])
 							}
-							 planetArr.sort(mySortNaNs)
-								createTable(planetArr)
+							 arrForSorting.sort(mySortNaNs)
+								createTable(arrForSorting)
 						}
 					}
 					
@@ -173,21 +184,38 @@ return response.json();
 					}
 			}
 
+			let filter = document.getElementById("filter");
+			filter.addEventListener("keyup", myFilter)
+			function myFilter() {
+				function isElseforEvery(number) {
+ 					 return (number.toLowerCase()).indexOf((filter.value).toLowerCase())== -1;
+				}
+				let arrForfilter = [];
+				let planetNames = [];
+				for(let i = 0; i <planetArr.length;i++) {
+					for(let key in planetArr[i]) {
+						if(key == "name"){
+							planetNames.push(planetArr[i][key])
+							if((planetArr[i][key].toLowerCase()).indexOf((filter.value).toLowerCase())!== -1) {
+							arrForfilter.push(planetArr[i]);
+							 while (result.childNodes.length != 1) {
+   						    result.removeChild(result.lastChild);
+   						}
+							 createTable(arrForfilter)
+					} else if(planetNames.every(isElseforEvery))
+						while (result.childNodes.length != 1) {
+   						    result.removeChild(result.lastChild);
+   						}
+					}
+				}		
+				}
+			}
 })
 .catch(
 	error => {
 		alert(error)
 	})
-
-
 	
-
-
-
-
-
-
-
 </script>
 
 
