@@ -24,59 +24,22 @@ return response.json();
    	preloader.style.display = "none";
 
  	const planetArr = text.results;
-
+ 	
 	let tr = document.createElement("tr");
-	for(key in text.results[0]) {
+	for(key in planetArr[0]) {
 	var td = document.createElement("td");
 	td.innerHTML = key;
 	tr.appendChild(td);
 	result.appendChild(tr);
 	}	
-	  	let headLine = document.querySelector('tr').children;
-		for(let i =0; i < headLine.length;i++) {
-			headLine[i].onclick = mySorting;
-			headLine[i].onmouseover = (e) => event.target.classList.add("pointer");
-		}
-		let  myUpdate = (e) => {
-			if(document.querySelector("#result input")) {
-			document.querySelector("#result input").parentNode.removeChild(document.querySelector("input"))
-			}
-			let position;
-			for(let i =0; i < event.target.parentNode.children.length;i++) {
-				if(event.target.parentNode.children[i].innerHTML === event.target.innerHTML ) {
-					position = i
-				}
-			}
-			let objProp = headLine[position].innerHTML;
-			let input = document.createElement("input");
-			var computedStyle = getComputedStyle(event.target);
-			input.style.width = computedStyle.width;
-			input.addEventListener("blur", (e) => {
-			let data = input.parentNode.getAttribute("data");
-			if( !isNaN(parseInt(event.target.parentNode.textContent)) && (isNaN(event.target.value)==true)){
-			alert("you must type number value");
-			event.target.parentNode.removeChild(event.target)
-			return false
-		}
-			else if(event.target.value !== ""){
-			event.target.parentNode.innerHTML = event.target.value + "<br><span style='color:red'>edited</span>";
-		} 
-		else {
-			alert("type some data to change value");
-			event.target.parentNode.removeChild(event.target)
-			return false
-				}
-				for(let i=0; i < planetArr.length; i++) {
-					for(let key in planetArr[i]) {
-						if(planetArr[i].name === data){
-							planetArr[i][objProp] = event.target.value + "<br><span style='color:red'>edited</span>";
-						}
-						}
-					}
-				})			
-			event.target.appendChild(input)
-			input.focus()
-			}		
+
+	  	const headLine = Array.from(document.querySelector('tr').children);
+		headLine.forEach((headRow) =>{
+			headRow.onclick = mySorting;
+			headRow.onmouseover = (e) => event.target.classList.add("pointer");
+		})
+
+
 		
 		let  createTable =  (arr) => {
 		arr.forEach((elem,index) =>{
@@ -99,7 +62,7 @@ return response.json();
 		   let planets = document.querySelectorAll('tr td:first-child')
 		 	for(let i = 1; i< planets.length;i++) {
 			planets[i].onmouseenter = (e) => {
-				let X = document.createElement("span")
+				let X = document.createElement("span");
 				X.innerHTML = "X";
 				X.classList.add("X")
 				planets[i].appendChild(X);
@@ -120,7 +83,49 @@ return response.json();
 		}
 		}
 		createTable(planetArr);
-
+		function myUpdate(e) {
+			if(result.querySelector("input")) {
+			result.removeChild(result.querySelector("input"))
+			}
+			let position;
+			for(let i =0; i < event.target.parentNode.children.length;i++) {
+				if(event.target.parentNode.children[i].innerHTML === event.target.innerHTML ) {
+					position = i
+				}
+			}
+			let objProp = headLine[position].innerHTML;
+			let input = document.createElement("input");
+			input.style.width = getComputedStyle(event.target).width;
+			input.addEventListener("blur", (e) => {
+			let data = input.parentNode.getAttribute("data");
+			if( !isNaN(parseInt(event.target.parentNode.textContent)) && (isNaN(event.target.value)==true)){
+			alert("you must type number value");
+			event.target.parentNode.removeChild(event.target)
+			return false
+		}	else if(event.target.value !== "" && event.target.parentNode.textContent === event.target.parentNode.parentNode.firstChild.textContent) {
+			alert("planet names cannot be edited");
+			event.target.parentNode.removeChild(event.target)
+			return false
+			}
+			else if(event.target.value !== ""){
+			event.target.parentNode.innerHTML = event.target.value + "<br><span style='color:red'>edited</span>";
+		}  
+		else {
+			alert("type some data to change value");
+			event.target.parentNode.removeChild(event.target)
+			return false
+				}
+				for(let i=0; i < planetArr.length; i++) {
+					for(let key in planetArr[i]) {
+						if(planetArr[i].name === data){
+							planetArr[i][objProp] = event.target.value + "<br><span style='color:red'>edited</span>";
+						}
+						}
+					}
+				})			
+			event.target.appendChild(input)
+			input.focus()
+			}		
 		function mySorting (e) {
 				let arrForSorting = [];
 				let planets = document.querySelectorAll('tr td:first-child')
@@ -128,7 +133,6 @@ return response.json();
 		 						for(let j = 0; j< planetArr.length;j++) {
 		 							for(let key in planetArr[j]) {
 		 								if(planets[i].textContent == planetArr[j][key]) {
-		 									console.log("somethig")
 		 									arrForSorting.push(planetArr[j])
 		 								}
 		 							}
@@ -147,8 +151,6 @@ return response.json();
 						}
 						else if(parseInt(planetArr[0][key].charAt(0))) {
 							let mySortNumbers = (a,b)=> {
-								console.log(parseInt(a[target]))
-								console.log(parseInt(b[target]))
 							return parseInt(a[target]) - parseInt(b[target])
 							}
 							let table = document.querySelectorAll('tr')
