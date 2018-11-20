@@ -14,9 +14,9 @@
 	<table id="result" border="1" class="main-table"></table>
 	<div id="modal" class="alertModal">
   		<div class="modal-content">
-  		<span class="close">&times;</span>
+  		<span class="close"></span>
     	<h1 id="alertMsg"></h1>
-    	<p id="cancel">cancel</p>
+    	<p id="cancel"></p>
   	</div>
     </div>
   	<button id="create" class="btn btn-primary btn-block">Create Planet</button>
@@ -33,25 +33,36 @@ return response.json();
    .then((text)=> {
    	const preloader = document.querySelector(".preloader")
    	preloader.style.display = "none";
-
  	let planetArr = text.results;
-
  	let X = document.createElement("span");
 	X.innerHTML = "X";
 	X.classList.add("X");
 	X.onmouseover = (e) => event.target.style.cssText = 'cursor: pointer'; 
-				X.onclick = function() {
-					if (confirm("Are you sure want to delete this planet?"))
-					result.removeChild(this.parentElement.parentElement)
+				X.onclick = function(e) {
+					modal.style.display = "block";
+					alertMsg.innerHTML = `Are you sure that you want to delete ${this.parentNode.textContent}?`
+					document.getElementById("cancel").innerHTML = "YES";
+					document.querySelector(".close").innerHTML = "NO";
+					document.querySelector(".close").onclick = ()=> modal.style.display = "none";
+
+					let thisPlanetname  = this.parentElement.textContent;
+					document.getElementById("cancel").addEventListener("click", () =>{ 
+
 					for(let i =0; i < planetArr.length; i++) {
 						for(let key in planetArr[i]) {
-							if(planetArr[i][key]=== this.parentElement.textContent.substring(0, this.parentElement.textContent.length-1)) {
+							if(planetArr[i][key]=== thisPlanetname.substring(0, thisPlanetname.length-1)) {
 								planetArr.splice(i,1)
 							}
 						}
 					}
-				}
+					for(let i = 1; i <result.children.length;i++){
+						result.children[i].innerHTML = ""
+					}	
+						modal.style.display = "none";
+					createTable(planetArr)
+					})
 
+				}
 	let tr = document.createElement("tr");
 	for(key in planetArr[0]) {
 	var td = document.createElement("td");
@@ -59,7 +70,6 @@ return response.json();
 	tr.appendChild(td);
 	result.appendChild(tr);
 							}	
-
 	  	const headLine = Array.from(document.querySelector('tr').children);
 		headLine.forEach((headRow) =>{
 			headRow.onclick = mySorting;
@@ -106,7 +116,6 @@ return response.json();
 		}
 	}
 		createTable(planetArr);		
-
 		function myUpdate(e) {
 			if(result.querySelector("input")) {
 			result.removeChild(result.querySelector("input"))
@@ -130,7 +139,6 @@ return response.json();
 			this.innerHTML = event.target.value + "<br><span style='color:red'>edited</span>";
 			this.appendChild(X);
 			this.setAttribute("data", event.target.value);
-
 		}
 			else if(event.target.value !== ""){
 			this.innerHTML = event.target.value + "<br><span style='color:red'>edited</span>";
@@ -149,7 +157,6 @@ return response.json();
 						}
 					}
 				})			
-
 			this.appendChild(input)
 			input.focus()
 			}		
@@ -212,7 +219,6 @@ return response.json();
 					wraper.appendChild(mesg)
 					}
 			}
-
 			let filter = document.getElementById("filter");
 			filter.addEventListener("keyup", myFilter)
 			function myFilter() {
@@ -258,7 +264,8 @@ return response.json();
 								event.target.focus();
 								alertMsg.innerHTML = "Enter the  " + headLine[i].textContent + " of planet!";
 								modal.style.display = "block";
-								console.log("1")
+								document.getElementById("cancel").innerHTML = "cancel";
+								document.querySelector(".close").innerHTML = "&times;";
 							document.querySelector(".close").addEventListener("click", (e)=>{
 							event.stopPropagation();
 							modal.style.display = "none";
@@ -288,10 +295,12 @@ return response.json();
 				planetArr.push(newPlanet);
 				result.appendChild(tr3);
 				result.querySelector("input").focus()
-
 				
 			}
-})
+			let array = [1,2,3]
+			return array
+}).then((text)=> {
+	console.log(text)})
 .catch(
 	error => {
 		alert(error)
