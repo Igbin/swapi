@@ -53,11 +53,8 @@ font-size: 1.5em;
 .highlight {
 	background-color: #ddd;
 }
-.hiden{
-	display: none;
-}
+
 #modal {
-    display: none; 
     position: fixed; 
     z-index: 1; 
     padding-top: 100px; 
@@ -94,4 +91,9 @@ font-size: 1.5em;
     color: red;
     text-decoration: none;
     cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+    opacity: 0 !important;
 }
