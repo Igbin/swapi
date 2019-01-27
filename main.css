@@ -14,9 +14,7 @@ body {
 #wraper {
 	text-align: center;
 }
-#result input {
-	margin:0 !important;
-}
+
 .main-table td, 
 
 .main-table th {
@@ -39,22 +37,25 @@ h1 {
 .pointer:hover {
 cursor: pointer;
 }
-.X {
+.x {
+margin: 0;
 color: red;
-border: 1px solid black;	
 position: absolute;
 top: 0;
 right: 0;
 font-size: 1.5em;
 }
-.X:hover {
+.x:hover {
 	cursor: pointer;
 }
 .highlight {
 	background-color: #ddd;
 }
-
+.hiden{
+	display: none;
+}
 #modal {
+    display: none; 
     position: fixed; 
     z-index: 1; 
     padding-top: 100px; 
@@ -79,7 +80,7 @@ font-size: 1.5em;
 #alertMsg{
 	color: red;
 }
-#close {
+.close  {
     color: #aaaaaa;
     float: right;
     font-size: 28px;
@@ -93,7 +94,3 @@ font-size: 1.5em;
     cursor: pointer;
 }
 
-.hidden {
-    display: none !important;
-    opacity: 0 !important;
-}
